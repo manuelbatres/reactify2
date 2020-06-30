@@ -2,8 +2,11 @@ import React, {Component} from 'react'
 import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import moment from 'moment'
+import { withRouter } from "react-router-dom";
+import Name from './vars';
 
-class PostUpdate extends Component {
+
+class PostForm extends Component {
     constructor(props){
         super(props)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -17,9 +20,12 @@ class PostUpdate extends Component {
             title: null,
             content: null,
             publish: null,
-            errors: {}
+            errors: {},
+        
         }
+        this.valor=0
     }
+   
 
     createPost(data){
       const endpoint = '/api/posts/' 
@@ -44,14 +50,15 @@ class PostUpdate extends Component {
               if (thisComp.props.newPostItemCreated){
                   thisComp.props.newPostItemCreated(responseData)
               }
-              thisComp.defaultState()
+             
               thisComp.clearForm()
           }).catch(function(error){
               console.log("error", error)
               alert("An error occured, please try again later.")
           })
       } 
-      
+      this.state=data;
+                this.valor = 1
   }
 
     updatePost(data){
@@ -61,42 +68,55 @@ class PostUpdate extends Component {
       let thisComp = this
       if (csrfToken !== undefined) {
           let lookupOptions = {
-              method: "PUT",
+              method: "DELETE",
               headers: {
                   'Content-Type': 'application/json',
                   'X-CSRFToken': csrfToken
               },
-              body: JSON.stringify(data),
-              credentials: 'include'
+             // body: JSON.stringify(data),
+             // credentials: 'include'
           }
 
           fetch(endpoint, lookupOptions)
-          .then(function(response){
-              return response.json()
-          }).then(function(responseData){
-              // console.log(responseData)
-              if (thisComp.props.postItemUpdated){
-                  thisComp.props.postItemUpdated(responseData)
-              }
-             
-          }).catch(function(error){
+       
+            
+            .then( (response) => {
+                if (response.status == 204){
+                    console.log('delete')
+                    this.valor=1
+                    window.location.reload(); 
+                }
+            } )
+            
+            .then(data => console.log("La dta:",data))
+            .catch(function(error){
               console.log("error", error)
+              
               alert("An error occured, please try again later.")
+             
           })
-      } 
+      }    
       
   }
 
     handleSubmit(event){
         event.preventDefault()
         let data = this.state
-
         const {post} = this.props
+        
+        this.updatePost(data);
+        
+        
+        //this.props.history.push(`/posts/${post.slug}/`);
+
+        /*
+       const {post} = this.props
         if (post !== undefined){
            this.updatePost(data)
          } else {
            this.createPost(data)
          }
+       */
        
     }
 
@@ -125,8 +145,16 @@ class PostUpdate extends Component {
         event.preventDefault()
       }
       this.postCreateForm.reset()
+      this.defaultState()
     }
 
+    clearForm(event){
+        if (event){
+          event.preventDefault()
+        }
+        this.postCreateForm.reset()
+        this.defaultState()
+      }
 
     clearFormRefs(){
       this.postTitleRef.current=''
@@ -158,12 +186,15 @@ class PostUpdate extends Component {
     }
 
     render(){
+        
         const {publish} = this.state
         const {title} = this.state
         const {content} = this.state
         const cancelClass = this.props.post !== undefined ? "d-none" : ""
         let thisComp = this
         return (
+            <div> {this.valor == 0 ? <h1>hola</h1> : <h>asdf</h>}
+           
             <form onSubmit={this.handleSubmit} ref={(el) => this.postCreateForm = el}>
                 <div className='form-group'>
                     <label for='title'>Post title</label>
@@ -209,11 +240,13 @@ class PostUpdate extends Component {
                      required='required'/>
                 </div>
                 <button type='submit' className='btn btn-primary'>Save</button>
-                <button className={`btn btn-secondary ${cancelClass}`} onClick={this.clearForm}>Cancel</button>
+                <button className={`btn btn-secondary ${cancelClass}`} onClick={this.clearForm}>Clear</button>
+               
             </form>
-        )
+            </div>
+        );
     }
 
 }
 
-export default PostUpdate
+export default withRouter(PostForm);

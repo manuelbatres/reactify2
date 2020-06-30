@@ -3,7 +3,7 @@ import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import { Link } from 'react-router-dom'
 
-import PostUpdate from './PostUpdate'
+import PostForm from './PostForm'
 
 class PostDetail extends Component {
     constructor(props){
@@ -78,7 +78,7 @@ class PostDetail extends Component {
         const {post} = this.state
         return(
             <p>{(doneLoading === true) ? <div>
-                {post === null ? "Not Found": 
+                {post === null ? "Delete": 
                 <div>
                 <h1>{post.title}</h1>
                 {post.slug}
@@ -88,7 +88,12 @@ class PostDetail extends Component {
                     state: { fromDashboard: false }
                   }}>Posts</Link></p>
 
-                  {post.owner === true ? <PostUpdate post={post} postItemUpdated={this.handlePostItemUpdated} /> : ""}
+                    <Link maintainScrollPosition={false} to={{
+                    pathname: `/posts/create`,
+                    state: { fromDashboard: false }
+                  }}>Create Post</Link>
+
+                  {post.owner === true ? <PostForm post={post} postItemUpdated={this.handlePostItemUpdated} /> : ""}
                 </div>
                }
            </div> : "Loading..."}</p>
