@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import { Link } from 'react-router-dom'
-import PostInline from './PostInline'
+import AccountInline from './AccountInline'
 
-class Posts extends Component {
+class Accounts extends Component {
 
     constructor(props){
         super(props)
@@ -30,7 +30,7 @@ class Posts extends Component {
     }
     
   loadPosts(nextEndpoint){
-      let endpoint = '/api/posts/' 
+      let endpoint = '/api/accounts/' 
       if (nextEndpoint !== undefined) {
           endpoint = nextEndpoint
       }
@@ -117,14 +117,14 @@ class Posts extends Component {
     return (
       <div>
           {author === true ? <Link className='mr-2' maintainScrollPosition={false} to={{
-                    pathname: `/posts/create/`,
+                    pathname: `/accounts/register/`,
                     state: { fromDashboard: false }
-                  }}>Create Post</Link> : ""}
+                  }}>Create Account</Link> : ""}
           
           <button onClick={this.togglePostListClass}>Toggle Class</button>
           {posts.length > 0 ? posts.map((postItem, index)=>{
               return (
-                      <PostInline post={postItem} elClass={postsListClass} />
+                      <AccountInline post={postItem} elClass={postsListClass} />
               )
           }) : <p>Delete</p>}
           {next !== null ? <button onClick={this.loadMorePosts}>Load more</button> : ''}
@@ -136,4 +136,4 @@ class Posts extends Component {
   }
 }
 
-export default Posts;
+export default Accounts;

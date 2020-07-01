@@ -3,26 +3,28 @@ import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import { Link } from 'react-router-dom'
 
-import PostForm from './PostForm'
 
-class PostDetail extends Component {
+import Register from './Register'
+
+class AccountDetail extends Component {
     constructor(props){
         super(props)
         this.handlePostItemUpdated= this.handlePostItemUpdated.bind(this)
         this.state = {
              slug: null,
-             post: null,
+             usuario: null,
              doneLoading: false,
-        }
-    }
+        }}
+        
+    
 
-    handlePostItemUpdated(postItemData){
+    handlePostItemUpdated(usuarioItemData){
         this.setState({
-            post: postItemData
+            usuario: usuarioItemData
         })
     }
     loadPost(slug){
-      const endpoint = `/api/posts/${slug}/` 
+      const endpoint = `/api/accounts/${slug}/` 
       let thisComp = this
       let lookupOptions = {
           method: "GET",
@@ -31,11 +33,11 @@ class PostDetail extends Component {
           }
       }
 
-      const csrfToken = cookie.load('csrftoken')
+      /*const csrfToken = cookie.load('csrftoken')
       if (csrfToken !== undefined) {
           lookupOptions['credentials'] = 'include'
           lookupOptions['headers']['X-CSRFToken'] = csrfToken
-       }
+       }*/
 
       fetch(endpoint, lookupOptions)
       .then(function(response){
@@ -44,18 +46,19 @@ class PostDetail extends Component {
           }
           return response.json()
       }).then(function(responseData){
-          if (responseData.detail){
-              thisComp.setState({
-                  doneLoading: true,
-                  post: null
-              })
-          } else {
-           thisComp.setState({
-                  doneLoading: true,
-                  post: responseData
-              })
-              alert(responseData)
-          }
+        if (responseData.detail){
+            thisComp.setState({
+                doneLoading: true,
+                usuario: null
+            })
+        } else {
+         thisComp.setState({
+                doneLoading: true,
+                usuario: responseData,
+            })
+            alert(responseData)
+        }
+        alert(responseData)
       }).catch(function(error){
           console.log("error", error)
       })
@@ -63,7 +66,7 @@ class PostDetail extends Component {
     componentDidMount(){
         this.setState({
                 slug: null,
-                post: null
+                usuario: null
             })
         if (this.props.match){
             const {slug} = this.props.match.params
@@ -71,35 +74,40 @@ class PostDetail extends Component {
                 slug: slug,
                 doneLoading: false
             })
+            alert(slug)
             this.loadPost(slug)
         }
+        alert("algo")
     }
     render(){
         const {doneLoading} = this.state
-        const {post} = this.state
+        const {usuario} = this.state
         return(
+          
+            
             <p>{(doneLoading === true) ? <div>
-                {post === null ? "Delete": 
+                {usuario === null ? "Delete": 
                 <div>
-                <h1>{post.title}</h1>
-                {post.slug}
+                <h1>{usuario.username}</h1>manuel
+                {usuario.slug}
 
                 <p className='lead'><Link maintainScrollPosition={false} to={{
-                    pathname: `/posts`,
+                    pathname: `/accounts`,
                     state: { fromDashboard: false }
-                  }}>Posts</Link></p>
+                  }}>Accounts</Link></p>
 
                     <Link maintainScrollPosition={false} to={{
-                    pathname: `/posts/create`,
+                    pathname: `/accounts/register`,
                     state: { fromDashboard: false }
-                  }}>Create Post</Link>
+                  }}>Create Account</Link>
 
-                  {post.owner === true ? <PostForm post={post} postItemUpdated={this.handlePostItemUpdated} /> : ""}
+                  {usuario.owner === true ? <Register post={usuario} postItemUpdated={this.handlePostItemUpdated} /> : ""}
                 </div>
                }
            </div> : "Loading..."}</p>
+          
         )
     }
 }
 
-export default PostDetail
+export default AccountDetail

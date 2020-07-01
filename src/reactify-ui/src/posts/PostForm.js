@@ -3,7 +3,7 @@ import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import moment from 'moment'
 import { withRouter } from "react-router-dom";
-import Name from './vars';
+
 
 
 class PostForm extends Component {
@@ -61,7 +61,41 @@ class PostForm extends Component {
                 this.valor = 1
   }
 
-    updatePost(data){
+  updatePost(data){
+    const {post} = this.props
+    const endpoint = `/api/posts/${post.slug}/` 
+    const csrfToken = cookie.load('csrftoken')
+    let thisComp = this
+    if (csrfToken !== undefined) {
+        let lookupOptions = {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(data),
+            credentials: 'include'
+        }
+
+        fetch(endpoint, lookupOptions)
+        .then(function(response){
+            return response.json()
+        }).then(function(responseData){
+            // console.log(responseData)
+            if (thisComp.props.postItemUpdated){
+                thisComp.props.postItemUpdated(responseData)
+            }
+           
+        }).catch(function(error){
+            console.log("error", error)
+            alert("An error occured, please try again later.")
+        })
+    } 
+    
+}
+
+
+    deletePost(){
       const {post} = this.props
       const endpoint = `/api/posts/${post.slug}/` 
       const csrfToken = cookie.load('csrftoken')
@@ -102,23 +136,21 @@ class PostForm extends Component {
     handleSubmit(event){
         event.preventDefault()
         let data = this.state
+
         const {post} = this.props
         
-        this.updatePost(data);
-        
-        
-        //this.props.history.push(`/posts/${post.slug}/`);
-
-        /*
-       const {post} = this.props
+      
         if (post !== undefined){
            this.updatePost(data)
          } else {
            this.createPost(data)
          }
-       */
+       
        
     }
+
+   
+
 
     handleInputChange(event){
         event.preventDefault()
@@ -140,13 +172,7 @@ class PostForm extends Component {
       })
     }
 
-    clearForm(event){
-      if (event){
-        event.preventDefault()
-      }
-      this.postCreateForm.reset()
-      this.defaultState()
-    }
+    
 
     clearForm(event){
         if (event){
@@ -191,6 +217,7 @@ class PostForm extends Component {
         const {title} = this.state
         const {content} = this.state
         const cancelClass = this.props.post !== undefined ? "d-none" : ""
+        const cancelClass2 = this.props.post == undefined ? "d-none" : ""
         let thisComp = this
         return (
             <div> {this.valor == 0 ? <h1>hola</h1> : <h>asdf</h>}
@@ -241,7 +268,7 @@ class PostForm extends Component {
                 </div>
                 <button type='submit' className='btn btn-primary'>Save</button>
                 <button className={`btn btn-secondary ${cancelClass}`} onClick={this.clearForm}>Clear</button>
-               
+                <button  className={`btn btn-danger ${cancelClass2}`} onClick={this.deletePost}>Delete</button>              
             </form>
             </div>
         );
