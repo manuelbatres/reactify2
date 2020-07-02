@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import { Link } from 'react-router-dom'
-import PostInline from './PostInline'
+import FilesInline from './FilesInline'
 
-class Posts extends Component {
+class Files extends Component {
 
     constructor(props){
         super(props)
@@ -30,7 +30,7 @@ class Posts extends Component {
     }
     
   loadPosts(nextEndpoint){
-      let endpoint = '/api/posts/' 
+      let endpoint = '/api/files/' 
       if (nextEndpoint !== undefined) {
           endpoint = nextEndpoint
       }
@@ -115,8 +115,10 @@ class Posts extends Component {
       
       
     return (
+      
+
       <div>
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="#"><p><Link maintainScrollPosition={false} to={{
                    pathname:`/posts`,
                    state: {fromDashboard: false}
@@ -161,16 +163,16 @@ class Posts extends Component {
   </div>
 </nav>
           {author === true ? <Link className='mr-2' maintainScrollPosition={false} to={{
-                    pathname: `/posts/create/`,
+                    pathname: `/files/register/`,
                     state: { fromDashboard: false }
-                  }}>Crear Post</Link> : ""}
+                  }}>Subir archivo</Link> : ""}
           
-          <button onClick={this.togglePostListClass}>Mostrar mas</button>
+          <button onClick={this.togglePostListClass}>Mostrar Mas</button>
           {posts.length > 0 ? posts.map((postItem, index)=>{
               return (
-                      <PostInline post={postItem} elClass={postsListClass} />
+                      <FilesInline post={postItem} elClass={postsListClass} />
               )
-          }) : <p>Borrar...</p>}
+          }) : <p>Eliminado</p>}
           {next !== null ? <button onClick={this.loadMorePosts}>Cargar mas</button> : ''}
       </div>
   
@@ -180,4 +182,4 @@ class Posts extends Component {
   }
 }
 
-export default Posts;
+export default Files;

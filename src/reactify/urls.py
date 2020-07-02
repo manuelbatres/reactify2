@@ -22,8 +22,11 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='react.html')),
       re_path(r'^posts/', TemplateView.as_view(template_name='react.html')),
        re_path(r'^accounts/', TemplateView.as_view(template_name='react.html')),
+       re_path(r'^comments/', TemplateView.as_view(template_name='react.html')),
+       re_path(r'^files/', TemplateView.as_view(template_name='react.html')),
     path('admin/', admin.site.urls),
     path('api/posts/', include('posts.urls')),
     path('api/accounts/', include('accounts.urls')),
-
+    path('api/comments/', include('comments.urls')),
+    path('api/files/', include('files.urls')),
 ]

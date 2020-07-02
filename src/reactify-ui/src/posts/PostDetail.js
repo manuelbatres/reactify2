@@ -54,7 +54,7 @@ class PostDetail extends Component {
                   doneLoading: true,
                   post: responseData
               })
-              alert(responseData)
+             
           }
       }).catch(function(error){
           console.log("error", error)

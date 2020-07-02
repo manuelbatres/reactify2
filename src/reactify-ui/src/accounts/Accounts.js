@@ -116,18 +116,62 @@ class Accounts extends Component {
       
     return (
       <div>
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#"><p><Link maintainScrollPosition={false} to={{
+                   pathname:`/posts`,
+                   state: {fromDashboard: false}
+               }}>Home</Link></p> </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"> <p><Link maintainScrollPosition={false} to={{
+                   pathname:`/posts`,
+                   state: {fromDashboard: false}
+               }}>Posts</Link></p> <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><p><Link maintainScrollPosition={false} to={{
+                   pathname:`/accounts`,
+                   state: {fromDashboard: false}
+               }}>Usuarios</Link></p></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><p><Link maintainScrollPosition={false} to={{
+                   pathname:`/comments`,
+                   state: {fromDashboard: false}
+               }}>Comentarios</Link></p></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><p><Link maintainScrollPosition={false} to={{
+                   pathname:`/files`,
+                   state: {fromDashboard: false}
+               }}>Archivos</Link></p></a>
+      </li>
+   
+     
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
           {author === true ? <Link className='mr-2' maintainScrollPosition={false} to={{
                     pathname: `/accounts/register/`,
                     state: { fromDashboard: false }
-                  }}>Create Account</Link> : ""}
+                  }}>Crear Usuario</Link> : ""}
           
-          <button onClick={this.togglePostListClass}>Toggle Class</button>
+          <button onClick={this.togglePostListClass}>Mostrar mas</button>
           {posts.length > 0 ? posts.map((postItem, index)=>{
               return (
                       <AccountInline post={postItem} elClass={postsListClass} />
               )
           }) : <p>Delete</p>}
-          {next !== null ? <button onClick={this.loadMorePosts}>Load more</button> : ''}
+          {next !== null ? <button onClick={this.loadMorePosts}>Cargar mas</button> : ''}
       </div>
   
 

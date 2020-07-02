@@ -12,6 +12,7 @@ class Register extends Component {
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
         this.clearForm = this.clearForm.bind(this)
+        this.deletePost = this.deletePost.bind(this)
         this.regUsernameRef = React.createRef()
         this.regPasswordRef = React.createRef()
         this.state = {
@@ -97,6 +98,7 @@ class Register extends Component {
 
 
     deletePost(){
+      alert("delete")
       const {post} = this.props
       const endpoint = `/api/accounts/${post.slug}/` 
       const csrfToken = cookie.load('csrftoken')
@@ -224,7 +226,8 @@ class Register extends Component {
         const {Almdisp} = this.state
         const {id_H_descargas} = this.state
         
-        
+        const cancelClass2 = this.props.post == undefined ? "d-none" : ""
+
        
         let thisComp = this
         return (
@@ -233,11 +236,11 @@ class Register extends Component {
                 <div class="d-flex justify-content-center h-100">
                     <div class="user_card">
                         <div class="d-flex justify-content-center">
-                            <h3 id="form-title">REGISTER ACCOUNT</h3>
+                            <h3 id="form-title">Registrar Usuario</h3>
                         </div>
                         <form onSubmit={this.handleSubmit} ref={(el) => this.postCreateForm = el}>
                           <div className='form-group'>
-                            <label for='username'>Username</label>
+                            <label for='username'>Nombre</label>
                             <input 
                             type='text' 
                             id='username' 
@@ -250,7 +253,7 @@ class Register extends Component {
                             required='required'/>
                           </div>
                           <div className='form-group'>
-                            <label for='password'>Password</label>
+                            <label for='password'>Contraseña</label>
                             <input 
                             type='password' 
                             id='password' 
@@ -275,7 +278,7 @@ class Register extends Component {
                             required='required'/>
                           </div>
                           <div className='form-group'>
-                            <label for='Almdisp'>Almdisp</label>
+                            <label for='Almdisp'>Capacidad</label>
                             <input 
                             type='number' 
                             id='Almdisp' 
@@ -287,7 +290,7 @@ class Register extends Component {
                             required='required'/>
                           </div>
                           <div className='form-group'>
-                            <label for='id_H_descargas'>id_H_descargas</label>
+                            <label for='id_H_descargas'>Id_H_descargas</label>
                             <input 
                             type='number' 
                             id='id_H_descargas' 
@@ -299,7 +302,7 @@ class Register extends Component {
                             required='required'/>
                           </div>
                           <div className='form-group'>
-                            <label for='id_publicacion'>id_publicacion</label>
+                            <label for='id_publicacion'>Id_publicacion</label>
                             <input 
                             type='number' 
                             id='id_publicacion' 
@@ -311,7 +314,7 @@ class Register extends Component {
                             required='required'/>
                           </div>
                           <div className='form-group'>
-                            <label for='id_PDR'>id_PDR</label>
+                            <label for='id_PDR'>Id_PDR</label>
                             <input 
                             type='number' 
                             id='id_PDR' 
@@ -322,7 +325,8 @@ class Register extends Component {
                             onChange={this.handleInputChange} 
                             required='required'/>
                           </div>
-                          <button type='submit' className='btn btn-primary'>Save</button>
+                          <button type='submit' className='btn btn-primary'>Guardar</button>
+                          <button  className={`btn btn-danger ${cancelClass2}`} onClick={this.deletePost}>Borrar</button>              
                         </form>
                     </div>
 		        </div>

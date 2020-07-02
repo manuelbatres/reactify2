@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import 'whatwg-fetch'
 import cookie from 'react-cookies'
 import { Link } from 'react-router-dom'
-import PostInline from './PostInline'
+import CommentInline from './CommentInline'
 
-class Posts extends Component {
+class Comments extends Component {
 
     constructor(props){
         super(props)
@@ -30,7 +30,7 @@ class Posts extends Component {
     }
     
   loadPosts(nextEndpoint){
-      let endpoint = '/api/posts/' 
+      let endpoint = '/api/comments/' 
       if (nextEndpoint !== undefined) {
           endpoint = nextEndpoint
       }
@@ -161,16 +161,16 @@ class Posts extends Component {
   </div>
 </nav>
           {author === true ? <Link className='mr-2' maintainScrollPosition={false} to={{
-                    pathname: `/posts/create/`,
+                    pathname: `/comments/register/`,
                     state: { fromDashboard: false }
-                  }}>Crear Post</Link> : ""}
+                  }}>Nuevo comentario</Link> : ""}
           
           <button onClick={this.togglePostListClass}>Mostrar mas</button>
           {posts.length > 0 ? posts.map((postItem, index)=>{
               return (
-                      <PostInline post={postItem} elClass={postsListClass} />
+                      <CommentInline post={postItem} elClass={postsListClass} />
               )
-          }) : <p>Borrar...</p>}
+          }) : <p>Delete</p>}
           {next !== null ? <button onClick={this.loadMorePosts}>Cargar mas</button> : ''}
       </div>
   
@@ -180,4 +180,4 @@ class Posts extends Component {
   }
 }
 
-export default Posts;
+export default Comments;

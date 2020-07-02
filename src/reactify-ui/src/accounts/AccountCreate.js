@@ -6,7 +6,7 @@ class AccountCreate extends Component {
   render(){
     return (
       <div>
-      <h1>Create Post</h1>
+      <h1>Crear Usuario</h1>
         <Register />
       </div>
     )

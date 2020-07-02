@@ -6,7 +6,7 @@ class PostCreate extends Component {
   render(){
     return (
       <div>
-      <h1>Create Post</h1>
+      <h1>Crear Post</h1>
         <PostForm />
       </div>
     )

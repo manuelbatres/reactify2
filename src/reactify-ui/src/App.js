@@ -6,11 +6,20 @@ import './App.css';
 import Posts from './posts/Posts';
 import PostDetail from './posts/PostDetail';
 import AccountDetail from './accounts/AccountDetail'
+import CommentDetail from './comments/CommentDetail'
+import FileDetail from './files/FileDetail'
+
 
 import PostCreate from './posts/PostCreate'
 
 import Accounts from './accounts/Accounts'
- 
+import RegisterC from './comments/Register'
+import Comments from './comments/Comments'
+
+import RegisterF from './files/Register'
+import Files from './files/Files'
+
+
 import Register from './accounts/Register'
 
 class App extends Component {
@@ -18,6 +27,12 @@ class App extends Component {
     return (
       <BrowserRouter>
           <Switch>
+            <Route exact path='/files' component={Files}/>
+            <Route exact path='/files/register' component={RegisterF}/>
+            <Route exact path='/files/:slug' component={FileDetail}/>
+            <Route exact path='/comments' component={Comments}/>
+            <Route exact path='/comments/register' component={RegisterC}/>
+            <Route exact path='/comments/:slug' component={CommentDetail}/>
             <Route exact path='/accounts' component={Accounts}/>
             <Route exact path='/accounts/register' component={Register}/>
             <Route exact path='/accounts/:slug' component={AccountDetail}/>

@@ -6,21 +6,19 @@ import { withRouter } from "react-router-dom";
 
 
 
-class PostForm extends Component {
+class Register extends Component {
     constructor(props){
         super(props)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
-        this.handleDraftChange = this.handleDraftChange.bind(this)
         this.clearForm = this.clearForm.bind(this)
-        this.handleSubmit2 = this.handleSubmit2.bind(this)
-        this.postTitleRef = React.createRef()
-        this.postContentRef = React.createRef()
+        this.deletePost = this.deletePost.bind(this)
+        this.regnombreRef = React.createRef()
+        this.regid_usuarioRef= React.createRef()
         this.state = {
-            draft: false,
-            title: null,
-            content: null,
-            publish: null,
+            id_usuario: 0,
+            nombre: null,
+            comentario: null,
             errors: {},
         
         }
@@ -29,7 +27,7 @@ class PostForm extends Component {
    
 
     createPost(data){
-      const endpoint = '/api/posts/' 
+      const endpoint = '/api/comments/' 
       const csrfToken = cookie.load('csrftoken')
       let thisComp = this
       if (csrfToken !== undefined) {
@@ -55,7 +53,8 @@ class PostForm extends Component {
               thisComp.clearForm()
           }).catch(function(error){
               console.log("error", error)
-              alert("An error occured, please try again later.")
+              alert(error)
+             // alert("An error occured, please try again later.")
           })
       } 
       this.state=data;
@@ -64,7 +63,7 @@ class PostForm extends Component {
 
   updatePost(data){
     const {post} = this.props
-    const endpoint = `/api/posts/${post.slug}/` 
+    const endpoint = `/api/comments/${post.slug}/` 
     const csrfToken = cookie.load('csrftoken')
     let thisComp = this
     if (csrfToken !== undefined) {
@@ -96,20 +95,11 @@ class PostForm extends Component {
 }
 
 
-    deletePost(post){
-    // alert("wow")
-      //let thisComp = this
-     
-    
-
-         
-    // const {post} = this.props
-     
-      
-     
-      const endpoint = `/api/posts/${post.slug}/` 
+    deletePost(){
+      const {post} = this.props
+      const endpoint = `/api/comments/${post.slug}/` 
       const csrfToken = cookie.load('csrftoken')
-    
+      let thisComp = this
       if (csrfToken !== undefined) {
           let lookupOptions = {
               method: "DELETE",
@@ -125,10 +115,9 @@ class PostForm extends Component {
        
             
             .then( (response) => {
-              //  alert(response)
                 if (response.status == 204){
                     console.log('delete')
-                  
+                    this.valor=1
                     window.location.reload(); 
                 }
             } )
@@ -141,34 +130,23 @@ class PostForm extends Component {
              
           })
       }    
-       
-    
+      
   }
-    
 
     handleSubmit(event){
         event.preventDefault()
         let data = this.state
-
+        
         const {post} = this.props
         
       
+        
         if (post !== undefined){
            this.updatePost(data)
          } else {
+        //   alert("warning")
            this.createPost(data)
          }
-       
-       
-    }
-
-    handleSubmit2(event){
-        event.preventDefault()
-        
-
-        const {post} = this.props
-        
-      this.deletePost(post)
        
        
     }
@@ -180,7 +158,7 @@ class PostForm extends Component {
         event.preventDefault()
         let key = event.target.name
         let value = event.target.value
-        if (key === 'title'){
+        if (key === 'comentario'){
             if (value.length > 120){
                 alert("This title is too long")
             }
@@ -190,11 +168,11 @@ class PostForm extends Component {
         })
     }
 
-    handleDraftChange(event){
-      this.setState({
-        draft: !this.state.draft
-      })
-    }
+   // handleDraftChange(event){
+    //  this.setState({
+     //   draft: !this.state.draft
+     // })
+   // }
 
     
 
@@ -207,27 +185,25 @@ class PostForm extends Component {
       }
 
     clearFormRefs(){
-      this.postTitleRef.current=''
-      this.postContentRef.current=''
+      this.regnombreRef.current=''
+      this.regid_usuarioRef.current=''
     }
 
 
     defaultState(){
       this.setState({
-            draft: false,
-            title: null,
-            content: null,
-            publish: moment(new Date()).format('YYYY-MM-DD'),
+        nombre: null,
+        comentario: null,
+        id_usuario: 0,
         })
     }
     componentDidMount(){
       const {post} = this.props
       if (post !== undefined){
         this.setState({
-            draft: post.draft,
-            title: post.title,
-            content: post.content,
-            publish: moment(post.publish).format('YYYY-MM-DD'),
+            id_usuario: post.id_usuario,
+            nombre: post.nombre,
+            comentario: post.comentario,
         })
       } else {
         this.defaultState()
@@ -236,68 +212,71 @@ class PostForm extends Component {
     }
 
     render(){
-        const {slug}=this.state
-        const {publish} = this.state
-        const {title} = this.state
-        const {content} = this.state
-        const cancelClass = this.props.post !== undefined ? "d-none" : ""
+        
+        const {id_usuario} = this.state
+        const {nombre} = this.state
+        const {comentario} = this.state
+       
         const cancelClass2 = this.props.post == undefined ? "d-none" : ""
+        
+       
         let thisComp = this
         return (
-            <div> 
-           
-            <form onSubmit={this.handleSubmit} ref={(el) => this.postCreateForm = el}>
-                <div className='form-group'>
-                    <label for='title'>Post Titulo</label>
-                    <input 
-                      type='text' 
-                      id='title' 
-                      name='title' 
-                      value={title}
-                      className='form-control'
-                      placeholder='Blog post title' 
-                      ref = {this.postTitleRef}
-                      onChange={this.handleInputChange} 
-                      required='required'/>
-                </div>
-                 <div className='form-group'>
-                    <label for='content'>Contenido</label>
-                    <textarea 
-                    id='content' 
-                    ref = {this.postContentRef} 
-                    name='content' 
-                    value={content}
-                    className='form-control' 
-                    placeholder='Post content' 
-                    onChange={this.handleInputChange} 
-                    required='required'/>
-                   
-                </div>
-                <div className='form-group'>
-                    <label for='draft'>
-                    <input type='checkbox' checked={this.state.draft} id='draft' name='draft' className='mr-2' onChange={this.handleDraftChange}/>
-                     Draft </label>
-                     <button onClick={(event)=>{event.preventDefault();this.handleDraftChange()}}>Toggle Draft</button>
-                </div>
-                <div className='form-group'>
-                    <label for='publish'>Dia de publicacion</label>
-                    <input 
-                    type='date' 
-                    id='publish' 
-                    name='publish' 
-                    className='form-control' 
-                    onChange={this.handleInputChange}
-                     value={publish}
-                     required='required'/>
-                </div>
-                <button type='submit' className='btn btn-primary'>Guardar</button>
-                <button className={`btn btn-secondary ${cancelClass}`} onClick={this.clearForm}>Limpiar</button>
-                <button  className={`btn btn-danger ${cancelClass2}`} onClick={this.handleSubmit2}>Borrar</button>              
-            </form>
-            </div>
+            
+            <div class="container h-100">
+                <div class="d-flex justify-content-center h-100">
+                    <div class="user_card">
+                        <div class="d-flex justify-content-center">
+                            <h3 id="form-title">REGISTRAR COMENTARIO</h3>
+                        </div>
+                        <form onSubmit={this.handleSubmit} ref={(el) => this.postCreateForm = el}>
+                          <div className='form-group'>
+                            <label for='id_usuario'>Id_usuario</label>
+                            <input 
+                            type='number' 
+                            id='id_usuario' 
+                            name='id_usuario' 
+                            value={id_usuario}
+                            className='form-control'
+                            placeholder='0' 
+                            ref = {this.regid_usuarioRef}
+                            onChange={this.handleInputChange} 
+                            required='required'/>
+                          </div>
+                          <div className='form-group'>
+                            <label for='password'>Nombre</label>
+                            <input 
+                            type='text' 
+                            id='nombre' 
+                            name='nombre' 
+                            value={nombre}
+                            className='form-control'
+                            placeholder='nombre' 
+                            ref = {this.regnombreRef}
+                            onChange={this.handleInputChange} 
+                            required='required'/>
+                          </div>
+                          <div className='form-group'>
+                            <label for='comentario'>Comentario</label>
+                            <input 
+                            type='text' 
+                            id='comentario' 
+                            name='comentario' 
+                            value={comentario}
+                            className='form-control'
+                            placeholder='comentario' 
+                            onChange={this.handleInputChange} 
+                            required='required'/>
+                          </div>            
+                          <button type='submit' className='btn btn-primary'>Guardar</button>
+                          <button  className={`btn btn-danger ${cancelClass2}`} onClick={this.deletePost}>Borrar</button>      
+                        </form>
+                    </div>
+		        </div>
+	        </div>
         );
     }
 
 }
 
-export default withRouter(PostForm);
+export default withRouter(Register);
